@@ -6,3 +6,5 @@ wailsjs/
 package-lock.json
 
 go.sum
+
+cura.log

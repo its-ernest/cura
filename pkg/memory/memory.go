@@ -3,6 +3,7 @@ package memory
 import (
 	"context"
 	"fmt"
+	"os"
 	"sort"
 	"time"
 
@@ -23,11 +24,22 @@ func NewManager(initialCap float64) *Manager {
 	}
 }
 
+// logToFile appends a timestamped message to cura.log
+func (m *Manager) logToFile(message string) {
+	f, err := os.OpenFile("cura.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+
+	timestamp := time.Now().Format("2006-01-02 15:04:05")
+	f.WriteString(fmt.Sprintf("[%s] %s\n", timestamp, message))
+}
+
 func (m *Manager) SetCap(percent float64) {
 	m.CapPercentage = percent
 }
 
-// StartEnforcer launches the background routine that stays active until the RAM is under the cap
 func (m *Manager) StartEnforcer(ctx context.Context) {
 	if m.IsActive {
 		return
@@ -38,7 +50,7 @@ func (m *Manager) StartEnforcer(ctx context.Context) {
 	m.cancelFunc = cancel
 
 	go func() {
-		ticker := time.NewTicker(3 * time.Second) // check frequency
+		ticker := time.NewTicker(3 * time.Second)
 		defer ticker.Stop()
 
 		for {
@@ -48,11 +60,12 @@ func (m *Manager) StartEnforcer(ctx context.Context) {
 				actualUsage := (float64(v.Total-v.Available) / float64(v.Total)) * 100
 
 				if actualUsage > m.CapPercentage {
-					fmt.Printf("[CURA] Usage %.1f%% exceeds Cap %.1f%%. Enforcing...\n", actualUsage, m.CapPercentage)
+					m.logToFile(fmt.Sprintf("ALERT: Usage %.1f%% exceeds Cap %.1f%%. Enforcing...", actualUsage, m.CapPercentage))
 					m.enforce()
 				}
 			case <-enforceCtx.Done():
 				m.IsActive = false
+				m.logToFile("SYSTEM: Enforcer stopped.")
 				return
 			}
 		}
@@ -65,29 +78,35 @@ func (m *Manager) StopEnforcer() {
 	}
 }
 
-// enforce finds the best candidates to close to free up RAM
 func (m *Manager) enforce() {
 	processes, err := process.Processes()
 	if err != nil {
 		return
 	}
 
-	// critical Windows processes that should be NEVER touched
-	protected := map[string]bool{
-		"explorer.exe": true,
-		"System":       true,
-		"svchost.exe":  true,
-		"lsass.exe":    true,
-		"wininit.exe":  true,
-		"csrss.exe":    true,
-		"services.exe": true,
-		"Wails.exe":    true, "cura.exe": true, "cura-dev.exe": true, // don't kill self!
-	}
+	// Critical Windows processes + Development tools
+    protected := map[string]bool{
+        "explorer.exe": true, "System": true, "svchost.exe": true,
+        "lsass.exe": true, "wininit.exe": true, "csrss.exe": true,
+        "services.exe": true, "ShellHost.exe": true, "sihost.exe": true,
+        "ShellExperienceHost.exe": true, "dllhost.exe": true, "ctfmon.exe": true,
+		
+		// dev tools 
+		"WindowsTerminal.exe": true, "OpenConsole.exe": true, "powershell.exe": true,
+
+		// critical for app to run
+		"msedgewebview2.exe": true, "cura.exe": true, "cura-dev.exe": true, 
+
+        // temp, needed for testing
+        "Code.exe": true, "node.exe": true, "taskhostw.exe": true, "wails.exe": true, 
+        "MSPCManagerService.exe": true, "esbuild.exe": true,
+    }
 
 	type candidate struct {
 		proc *process.Process
 		mem  uint64
 		name string
+		cpu  float64
 	}
 
 	var candidates []candidate
@@ -98,22 +117,18 @@ func (m *Manager) enforce() {
 			continue
 		}
 
-		// Windows specific: Idle detection
-		// if cpu is near zero, it a prime candidate for background cleanup
-		cpu, _ := p.CPUPercent()
-		if cpu > 0.5 { 
-			continue
-		}
-
 		memInfo, _ := p.MemoryInfo()
 		if memInfo == nil || memInfo.RSS == 0 {
 			continue
 		}
 
+		cpuVal, _ := p.CPUPercent()
+
 		candidates = append(candidates, candidate{
 			proc: p,
 			mem:  memInfo.RSS,
 			name: name,
+			cpu:  cpuVal,
 		})
 	}
 
@@ -121,10 +136,20 @@ func (m *Manager) enforce() {
 		return candidates[i].mem > candidates[j].mem
 	})
 
-	if len(candidates) > 0 {
-		target := candidates[0]
-		// equivalent of clicking "End Task" in Task Manager.
-		fmt.Printf("[CURA] Enforcing: Closing %s (%d MB)\n", target.name, target.mem/1024/1024)
-		target.proc.Terminate()
+	for _, target := range candidates {
+		v, _ := mem.VirtualMemory()
+		currentUsage := (float64(v.Total-v.Available) / float64(v.Total)) * 100
+
+		if currentUsage <= m.CapPercentage {
+			break
+		}
+
+		if target.cpu < 2.0 || currentUsage > (m.CapPercentage + 5.0) {
+			m.logToFile(fmt.Sprintf("ACTION: Terminating %s (%d MB) | System Pressure: %.2f%%",
+				target.name, target.mem/1024/1024, currentUsage))
+
+			target.proc.Kill()
+			time.Sleep(100 * time.Millisecond)
+		}
 	}
 }

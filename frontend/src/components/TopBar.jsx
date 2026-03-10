@@ -3,16 +3,6 @@ import { StartEnforcement, StopEnforcement } from '../../wailsjs/go/main/App';
 
 export function TopBar({ isEnforced, setIsEnforced }) {
 
-  useEffect(() => {
-    if (isEnforced) {
-      console.log("Cura Enforcer: Enabled");
-      StartEnforcement();
-    } else {
-      console.log("Cura Enforcer: Disabled");
-      StopEnforcement();
-    }
-  }, []);
-
   const handleToggle = () => {
     const nextState = !isEnforced;
     setIsEnforced(nextState);
@@ -52,8 +42,7 @@ export function TopBar({ isEnforced, setIsEnforced }) {
             border: 'none',
             transition: 'background 0.3s ease'
           }}
-          onClick={handleToggle}
-        >
+          onClick={handleToggle} >
           <div
             className="toggle-circle"
             style={{
@@ -65,8 +54,7 @@ export function TopBar({ isEnforced, setIsEnforced }) {
               background: 'white',
               transition: 'all 0.3s ease',
               transform: isEnforced ? 'translateX(26px)' : 'translateX(3px)'
-            }}
-          />
+            }} />
         </button>
       </div>
     </header>

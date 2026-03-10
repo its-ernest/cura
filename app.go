@@ -4,6 +4,7 @@ import (
 	"context"
 	"math"
 	"os"
+	"fmt"
 
 	"github.com/its-ernest/cura/pkg/memory"
 
@@ -52,10 +53,11 @@ func NewApp() *App {
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 	// automatically load settings on startup
-	/*cfg, err := a.LoadSettings()
+	cfg, err := a.LoadSettings()
 	if err == nil && cfg.Enforcement.IsEnforced {
 		a.memoryManager.StartEnforcer(ctx)
-	}*/
+		fmt.Println("Auto-enforcer started")
+	}
 }
 
 // SetMemoryCap bridges the React slider to the Go memory manager
