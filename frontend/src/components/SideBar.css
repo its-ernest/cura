@@ -1,0 +1,182 @@
+.glass-sidebar {
+  width: 256px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(12px);
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 10;
+}
+
+.sidebar-content {
+  padding: 24px;
+}
+
+/* Logo Section */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 15px -3px rgba(59, 50, 226, 0.2);
+  color: white;
+  font-size: 1.2rem;
+}
+
+.brand-name {
+  font-size: 20px;
+  font-weight: 800;
+  margin: 0;
+  color: white;
+}
+
+.brand-subtitle {
+  font-size: 10px;
+  color: var(--slate-500);
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 1px;
+}
+
+/* Navigation */
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--slate-400);
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item.active {
+  background: var(--primary);
+  color: white;
+}
+
+.nav-item:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+}
+
+.nav-icon {
+  width: 18px;
+  text-align: center;
+}
+
+/* Footer & Status Card */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 24px;
+}
+
+.status-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 16px;
+}
+
+.status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.status-label {
+  font-size: 10px;
+  font-weight: bold;
+  color: var(--slate-500);
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--emerald);
+}
+
+.status-text {
+  font-size: 12px;
+  color: #cbd5e1;
+  text-align: left;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Dev Credit Info */
+.dev-credit {
+  padding: 0 8px;
+}
+
+.dev-label-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.dev-code-icon {
+  font-size: 10px;
+  color: var(--primary);
+}
+
+.dev-title {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--slate-600);
+  letter-spacing: 1px;
+}
+
+.dev-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--slate-200);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.dev-contact {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--slate-500);
+}
+
+.dev-credit p {
+  font-size: 10px;
+  color: var(--primary);
+  margin: 4px 0;
+  text-decoration: none;
+}
+
+.dev-legal {
+  font-size: 9px !important;
+  color: var(--slate-600) !important;
+  margin-top: 8px !important;
+}

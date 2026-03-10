@@ -1,0 +1,8 @@
+build/bin
+node_modules
+frontend/dist
+wailsjs/
+*.md5
+package-lock.json
+
+go.sum
