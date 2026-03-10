@@ -20,16 +20,3 @@ First off, thank you for considering contributing to Cura!
 * [ ] Dark/Light theme toggle.
 
 ```
-
----
-
-### Final Step for GitHub
-
-1. Save these files as `README.md`, `LICENSE`, and `CONTRIBUTING.md` in your project root.
-2. Run these commands to push them:
-```powershell
-git add README.md LICENSE CONTRIBUTING.md
-git commit -m "docs: add readme, license, and contributing guidelines"
-git push origin main
-
-```
