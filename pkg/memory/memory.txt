@@ -3,9 +3,10 @@ package memory
 import (
 	"context"
 	"fmt"
-	"os"
 	"sort"
 	"time"
+
+	"github.com/its-ernest/cura/pkg/logging"
 
 	"github.com/shirou/gopsutil/v3/mem"
 	"github.com/shirou/gopsutil/v3/process"
@@ -17,23 +18,13 @@ type Manager struct {
 	cancelFunc    context.CancelFunc
 }
 
+var l *logging.Logger = logging.NewLogger("cura.log");
+
 func NewManager(initialCap float64) *Manager {
 	return &Manager{
 		CapPercentage: initialCap,
 		IsActive:      false,
 	}
-}
-
-// logToFile appends a timestamped message to cura.log
-func (m *Manager) logToFile(message string) {
-	f, err := os.OpenFile("cura.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return
-	}
-	defer f.Close()
-
-	timestamp := time.Now().Format("2006-01-02 15:04:05")
-	f.WriteString(fmt.Sprintf("[%s] %s\n", timestamp, message))
 }
 
 func (m *Manager) SetCap(percent float64) {
@@ -60,12 +51,12 @@ func (m *Manager) StartEnforcer(ctx context.Context) {
 				actualUsage := (float64(v.Total-v.Available) / float64(v.Total)) * 100
 
 				if actualUsage > m.CapPercentage {
-					m.logToFile(fmt.Sprintf("ALERT: Usage %.1f%% exceeds Cap %.1f%%. Enforcing...", actualUsage, m.CapPercentage))
+					l.Write(fmt.Sprintf("ALERT: Usage %.1f%% exceeds Cap %.1f%%. Enforcing...", actualUsage, m.CapPercentage))
 					m.enforce()
 				}
 			case <-enforceCtx.Done():
 				m.IsActive = false
-				m.logToFile("SYSTEM: Enforcer stopped.")
+				l.Write("SYSTEM: Enforcer stopped.")
 				return
 			}
 		}
@@ -145,11 +136,11 @@ func (m *Manager) enforce() {
 		}
 
 		if target.cpu < 2.0 || currentUsage > (m.CapPercentage + 5.0) {
-			m.logToFile(fmt.Sprintf("ACTION: Terminating %s (%d MB) | System Pressure: %.2f%%",
+			l.Write(fmt.Sprintf("ACTION: Terminating %s (%d MB) | System Pressure: %.2f%%",
 				target.name, target.mem/1024/1024, currentUsage))
 
 			target.proc.Kill()
-			time.Sleep(100 * time.Millisecond)
+			time.Sleep(70 * time.Millisecond)
 		}
 	}
 }

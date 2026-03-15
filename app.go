@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"math"
 	"os"
-	"fmt"
 
 	"github.com/its-ernest/cura/pkg/memory"
 
@@ -21,7 +21,8 @@ type SystemStats struct {
 	TotalRAM     uint64  `json:"totalRam"`
 	ProcessCount int     `json:"processCount"`
 }
-//fixed:
+
+// fixed:
 // EnforcementConfig separate instead of anonymous nested structs
 type EnforcementConfig struct {
 	IsEnforced bool    `toml:"is_enforced" json:"is_enforced"`
@@ -76,7 +77,7 @@ func (a *App) GetLiveStats() (SystemStats, error) {
 
 	// get Memory Stats
 	v, _ := mem.VirtualMemory()
-	
+
 	// logic: calculate actual usage (total - available)
 	actualUsed := float64(v.Total - v.Available)
 	actualUsagePercent := (actualUsed / float64(v.Total)) * 100

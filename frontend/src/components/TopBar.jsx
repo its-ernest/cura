@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import { StartEnforcement, StopEnforcement } from '../../wailsjs/go/main/App';
 
 export function TopBar({ isEnforced, setIsEnforced }) {
