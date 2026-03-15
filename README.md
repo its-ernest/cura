@@ -14,6 +14,8 @@ If you are a user looking to keep your system snappy, you can download the lates
   </a>
 </div>
 
+* Extract the content of the downloaded file and launch ***cura.exe*** .
+* Then **TOGGLE** the ***Enforce Now*** button
 ---
 
 ## Features
