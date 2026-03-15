@@ -26,7 +26,7 @@ First off, thank you for considering contributing to Cura! It's people like you 
 * `/frontend`: React dashboard and UI components.
 
 4. **Testing:**
-* `/pkg/memory/utils_test.go: This critical test must pass if you alter or improve protection of critical processes logic(Currently Windows-specific)
+* `/pkg/memory/utils_test.go`: This critical test must pass if you alter or improve protection of critical processes logic(Currently Windows-specific)
 
 ## 📝 Contribution Guidelines
 
