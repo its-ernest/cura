@@ -1,8 +1,10 @@
-# 🛡️ Cura
+# 🛡️ Cura (as in "curer")
 
 **Precision System Resource Enforcement for Windows.**
 
 Cura is a lightweight, Go-powered utility designed to protect your system's stability. By monitoring real-time RAM and CPU usage, Cura automatically identifies and terminates background "stale" processes when your custom-defined memory caps are breached.
+
+<img src="./screenshot.png" alt="Screenshot">
 
 ## Get Started Now
 
