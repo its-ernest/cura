@@ -44,7 +44,7 @@ cpu_ceiling = 70.0
 
 We welcome contributions from the community! Whether it's fixing bugs, improving the UI, or adding new "Intelligence" logic, your help makes Cura better.
 
-* **Want to help?** Check out our [CONTRIBUTING.md](https://www.google.com/search?q=./CONTRIBUTING.md) for setup instructions.
+* **Want to help?** Check out our [CONTRIBUTING.md](./CONTRIBUTING.md) for setup instructions.
 * **Tech Stack:** Go 1.21+, React, Wails CLI.
 
 ## Safety Disclaimer
@@ -54,3 +54,4 @@ Cura has the power to terminate processes. While it includes a default protectio
 ---
 
 **License:** [MIT](https://www.google.com/search?q=./LICENSE)
+"As a condition of this license, any software or redistribution derived from this source code must retain the 'Original Developer' attribution and a link to the original repository github.com/its-ernest/cura in a clearly visible 'About' or 'Credits' section of the user interface."
