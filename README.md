@@ -6,7 +6,7 @@ Cura is a lightweight, Go-powered utility designed to protect your system's stab
 
 <img src="./screenshot.png" alt="Screenshot">
 
-## Get Started Now
+## Download For Free Now
 
 If you are a user looking to keep your system snappy, you can download the latest production-ready binary here:
 
