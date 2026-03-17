@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"strings"
 
 	"github.com/its-ernest/cura/pkg/memory"
+	"github.com/its-ernest/cura/pkg/logging"
 
 	"github.com/BurntSushi/toml"
 	"github.com/shirou/gopsutil/v3/cpu"
@@ -41,6 +43,8 @@ type App struct {
 	memoryManager *memory.Manager
 	config        Config
 }
+
+var l *logging.Logger = logging.NewLogger("cura.log")
 
 // NewApp creates a new App instance
 func NewApp() *App {
@@ -126,4 +130,27 @@ func (a *App) SaveSettings(cfg Config) error {
 	}
 	defer f.Close()
 	return toml.NewEncoder(f).Encode(cfg)
+}
+
+func (a *App) GetLogs(limit int) (string, error) {
+    
+    content, err := l.ReadLogs(limit) 
+    if err != nil {
+        return "", err
+    }
+
+    lines := strings.Split(strings.TrimSpace(content), "\n")
+    if len(lines) == 0 || (len(lines) == 1 && lines[0] == "") {
+        return "Waiting for system events...", nil
+    }
+
+    start := 0
+    if len(lines) > limit {
+        start = len(lines) - limit
+    }
+
+    finalLogs := strings.Join(lines[start:], "\n")
+    fmt.Printf("DEBUG: Sent %d lines to UI.\n", len(lines[start:]))
+    
+    return finalLogs, nil
 }

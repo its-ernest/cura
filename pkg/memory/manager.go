@@ -12,6 +12,7 @@ type Manager struct {
 	CapPercentage float64
 	IsActive      bool
 	cancelFunc    context.CancelFunc
+	//UserConfig    Config
 }
 
 func NewManager(initialCap float64) *Manager {

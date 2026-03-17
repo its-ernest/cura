@@ -5,6 +5,7 @@ import { TopBar } from './components/TopBar';
 import { SideBar } from './components/SideBar';
 import { Dashboard } from './components/Dashboard';
 import { Whitelist } from './components/Whitelist';
+import { LogView } from './components/LogView';
 
 // Wails Go Functions
 import { LoadSettings, SaveSettings, StartEnforcement, StopEnforcement } from '../wailsjs/go/main/App';
@@ -63,7 +64,7 @@ function App() {
       case 'whitelist':
         return <Whitelist />;
       case 'terminal':
-        return <div className="placeholder-view">System Logs coming soon...</div>;
+        return <LogView />;
       case 'advanced':
         return <div className="placeholder-view">Modes & Routines coming soon...</div>;
       default:

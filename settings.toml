@@ -1,6 +1,6 @@
 version = "1.0.0"
 
 [enforcement]
-  is_enforced = true
+  is_enforced = false
   memory_cap = 70.0
   cpu_ceiling = 70.0
