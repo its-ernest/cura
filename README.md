@@ -54,4 +54,4 @@ Cura has the power to terminate processes. While it includes a default protectio
 ---
 
 **License:** [MIT](https://www.google.com/search?q=./LICENSE)
-"As a condition of this license, any software or redistribution derived from this source code must retain the 'Original Developer' attribution and a link to the original repository github.com/its-ernest/cura in a clearly visible 'About' or 'Credits' section of the user interface."
+* "As a condition of this license, any software or redistribution derived from this source code must retain the 'Original Developer' attribution and a link to the original repository github.com/its-ernest/cura in a clearly visible 'About' or 'Credits' section of the user interface."
