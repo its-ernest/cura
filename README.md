@@ -45,7 +45,7 @@ cpu_ceiling = 70.0
 We welcome contributions from the community! Whether it's fixing bugs, improving the UI, or adding new "Intelligence" logic, your help makes Cura better.
 
 * **Want to help?** Check out our [CONTRIBUTING.md](./CONTRIBUTING.md) for setup instructions.
-* **Tech Stack:** Go 1.21+, React, Wails CLI.
+* **Tech Stack:** Go 1.24+, React, Wails CLI.
 
 ## Safety Disclaimer
 

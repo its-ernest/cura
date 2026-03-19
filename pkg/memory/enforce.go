@@ -43,6 +43,7 @@ func (m *Manager) enforce() {
 
 		// dynamic filter: protects hardware drivers and system32 sub-binaries
 		if IsSystemOrDriver(p) {
+			l.Write(fmt.Sprintf("SKIP: Skipping system %s", name))
 			continue
 		}
 
@@ -61,7 +62,7 @@ func (m *Manager) enforce() {
 		}
 
 		// filter stale/foreground
-		if !IsStale(p, 10*time.Minute) {
+		if !m.IsStale(p, 10*time.Minute) {
 			continue
 		}
 
@@ -88,7 +89,7 @@ func (m *Manager) enforce() {
 		}
 
 		// idle hogs vs critical pressure
-		if target.cpu < 2.0 || currentUsage > (m.CapPercentage + 5.0) {
+		if target.cpu < 2.0 || currentUsage > (m.CapPercentage+5.0) {
 			l.Write(fmt.Sprintf("ACTION: Terminating %s (%d MB) | System Pressure: %.2f%%",
 				target.name, bytesToMB(target.mem), currentUsage))
 

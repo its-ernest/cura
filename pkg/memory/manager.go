@@ -9,16 +9,17 @@ import (
 )
 
 type Manager struct {
-	CapPercentage float64
-	IsActive      bool
-	cancelFunc    context.CancelFunc
-	//UserConfig    Config
+	CapPercentage     float64
+	IsActive          bool
+	cancelFunc        context.CancelFunc
+	LastForegroundMap map[int32]time.Time // last seen foreground
 }
 
 func NewManager(initialCap float64) *Manager {
 	return &Manager{
-		CapPercentage: initialCap,
-		IsActive:      false,
+		CapPercentage:     initialCap,
+		IsActive:          false,
+		LastForegroundMap: make(map[int32]time.Time),
 	}
 }
 
@@ -52,7 +53,7 @@ func (m *Manager) StartEnforcer(ctx context.Context) {
 				if actualUsage > m.CapPercentage {
 					l.Write(fmt.Sprintf("ALERT: Pressure %.1f%% exceeds Cap %.1f%%. Enforcing...", actualUsage, m.CapPercentage))
 					m.enforce()
-					
+
 					// BURST MODE: Re-check quickly to catch rapid spikes
 					time.Sleep(500 * time.Millisecond)
 				} else {
