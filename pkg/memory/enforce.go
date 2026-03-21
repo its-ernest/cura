@@ -43,7 +43,7 @@ func (m *Manager) enforce() {
 
 		// dynamic filter: protects hardware drivers and system32 sub-binaries
 		if IsSystemOrDriver(p) {
-			l.Write(fmt.Sprintf("SKIP: Skipping system %s", name))
+			//l.Write(fmt.Sprintf("SKIP: Skipping system %s", name))
 			continue
 		}
 

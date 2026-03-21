@@ -7,6 +7,7 @@ require (
 	github.com/LightningDev1/go-foreground v0.0.0-20250402184805-913886c46a00
 	github.com/shirou/gopsutil/v3 v3.24.5
 	github.com/wailsapp/wails/v2 v2.11.0
+	golang.org/x/sys v0.30.0
 )
 
 require (
@@ -42,7 +43,6 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.4 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
 	golang.org/x/net v0.35.0 // indirect
-	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 )
 

@@ -9,5 +9,5 @@ b:
 # clean rebuild
 cb:
 	wails build -clean -ldflags "-w -s"
-	copy "cura.log" "build/bin/cura.log"
+	type nul > "build/bin/cura.log"
 	copy "settings.toml" "build/bin/settings.toml"

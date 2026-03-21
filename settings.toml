@@ -1,6 +1,158 @@
 version = "1.0.0"
 
 [enforcement]
-  is_enforced = false
+  is_enforced = true
   memory_cap = 70.0
   cpu_ceiling = 70.0
+
+[apps]
+  [apps."360 Extreme Browser"]
+    Directory = "C:\\Users\\Tycoon\\AppData\\Local\\360extremebrowser\\Chrome\\Application"
+    IsExempt = false
+  [apps."360 Total Security"]
+    Directory = "C:\\Program Files (x86)\\360\\Total Security"
+    IsExempt = false
+  [apps.3uTools]
+    Directory = "C:\\Program Files (x86)\\3uToolsV3"
+    IsExempt = false
+  [apps."Android Studio"]
+    Directory = "C:\\Program Files\\Android\\Android Studio\\bin"
+    IsExempt = false
+  [apps."Apache NetBeans version 28"]
+    Directory = "C:\\Program Files\\Apache NetBeans"
+    IsExempt = false
+  [apps."Apple Mobile Device Support"]
+    Directory = "C:\\Program Files\\Common Files\\Apple\\Mobile Device Support"
+    IsExempt = false
+  [apps."Arduino IDE 2.3.7"]
+    Directory = "C:\\Program Files\\Arduino IDE"
+    IsExempt = false
+  [apps.Autopsy]
+    Directory = "C:\\Program Files\\Autopsy-4.22.1"
+    IsExempt = false
+  [apps.Bandicam]
+    Directory = "\"C:\\Program Files\\Bandicam\""
+    IsExempt = false
+  [apps."Bandicam MPEG-1 Decoder"]
+    Directory = "\"C:\\Program Files (x86)\\BandiMPEG1\""
+    IsExempt = false
+  [apps.BlueStacks]
+    Directory = "C:\\Program Files\\BlueStacks_nxt"
+    IsExempt = false
+  [apps."DB Browser for SQLite"]
+    Directory = "C:\\Program Files\\DB Browser for SQLite"
+    IsExempt = false
+  [apps."Docker Desktop"]
+    Directory = "C:\\Program Files\\Docker\\Docker"
+    IsExempt = false
+  [apps."Driver Booster 12"]
+    Directory = "C:\\Program Files (x86)\\IObit\\Driver Booster"
+    IsExempt = false
+  [apps."Exam Environment"]
+    Directory = "\"C:\\Users\\Tycoon\\AppData\\Local\\Exam Environment\""
+    IsExempt = false
+  [apps.Git]
+    Directory = "C:\\Program Files\\Git"
+    IsExempt = false
+  [apps."Glary Utilities 6.22"]
+    Directory = "C:\\Program Files (x86)\\Glary Utilities"
+    IsExempt = false
+  [apps."GnuWin32: Make-3.81"]
+    Directory = "C:\\Program Files (x86)\\GnuWin32"
+    IsExempt = false
+  [apps."Google Chrome"]
+    Directory = "C:\\Program Files\\Google\\Chrome\\Application"
+    IsExempt = true
+  [apps."Inno Setup version 6.4.2"]
+    Directory = "C:\\Program Files (x86)\\Inno Setup 6"
+    IsExempt = false
+  [apps."Java(TM) SE Development Kit 11.0.30 (64-bit)"]
+    Directory = "C:\\Program Files\\Java\\jdk-11.0.30"
+    IsExempt = false
+  [apps."LPro Max V1.1"]
+    Directory = "C:\\Program Files (x86)\\LPro Max\\LPro Max V1.1"
+    IsExempt = false
+  [apps."Microsoft Edge"]
+    Directory = "C:\\Program Files (x86)\\Microsoft\\Edge\\Application"
+    IsExempt = false
+  [apps."Microsoft Edge WebView2 Runtime"]
+    Directory = "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application"
+    IsExempt = false
+  [apps."Microsoft Office Professional Plus 2016 - en-us"]
+    Directory = "C:\\Program Files\\Microsoft Office"
+    IsExempt = false
+  [apps."Microsoft OneDrive"]
+    Directory = "C:\\Users\\Tycoon\\AppData\\Local\\Microsoft\\OneDrive\\26.040.0301.0001"
+    IsExempt = false
+  [apps."Microsoft Visual C++ 2012 Redistributable (x64) - 11.0.61030"]
+    Directory = "C:\\ProgramData\\Package Cache\\{ca67548a-5ebe-413a-b50c-4b9ceb6d66c6}"
+    IsExempt = false
+  [apps."Microsoft Visual C++ 2012 Redistributable (x86) - 11.0.61030"]
+    Directory = "C:\\ProgramData\\Package Cache\\{33d1fd90-4274-48a1-9bc1-97e33d9c2d6f}"
+    IsExempt = false
+  [apps."Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.40664"]
+    Directory = "C:\\ProgramData\\Package Cache\\{042d26ef-3dbe-4c25-95d3-4c1b11b235a7}"
+    IsExempt = false
+  [apps."Microsoft Visual C++ 2013 Redistributable (x86) - 12.0.40664"]
+    Directory = "C:\\ProgramData\\Package Cache\\{9dff3540-fc85-4ed5-ac84-9e3c7fd8bece}"
+    IsExempt = false
+  [apps."Microsoft Visual C++ 2015-2022 Redistributable (x86) - 14.44.35211"]
+    Directory = "C:\\ProgramData\\Package Cache\\{0b5169e3-39da-4313-808e-1f9c0407f3bf}"
+    IsExempt = false
+  [apps."Microsoft Visual C++ v14 Redistributable (x64) - 14.50.35719"]
+    Directory = "C:\\ProgramData\\Package Cache\\{91ee571b-0e8a-4c65-9eaf-2e2f5fc60c00}"
+    IsExempt = false
+  [apps."Microsoft Visual Studio Code (User)"]
+    Directory = "C:\\Users\\Tycoon\\AppData\\Local\\Programs\\Microsoft VS Code"
+    IsExempt = true
+  [apps."Microsoft Visual Studio Installer"]
+    Directory = "\"C:\\Program Files (x86)\\Microsoft Visual Studio\\Installer\""
+    IsExempt = false
+  [apps."Microsoft Visual Studio Tools for Applications 2019"]
+    Directory = "C:\\ProgramData\\Package Cache\\{f3fbabb4-bcfb-45eb-8fff-9b784fd68c38}"
+    IsExempt = false
+  [apps."Microsoft Windows Desktop Runtime - 8.0.5 (x64)"]
+    Directory = "C:\\ProgramData\\Package Cache\\{f1becfe0-3a94-4d8f-ba39-c5853803edda}"
+    IsExempt = false
+  [apps."MyPublicWiFi 31.2"]
+    Directory = "C:\\Program Files (x86)\\MyPublicWiFi"
+    IsExempt = false
+  [apps."Opera Stable 128.0.5807.77"]
+    Directory = "C:\\Users\\Tycoon\\AppData\\Local\\Programs\\Opera"
+    IsExempt = false
+  [apps."PostgreSQL 17 "]
+    Directory = "C:\\Program Files\\PostgreSQL\\17"
+    IsExempt = false
+  [apps."Postman x64 12.2.3"]
+    Directory = "C:\\Users\\Tycoon\\AppData\\Local\\Postman"
+    IsExempt = false
+  [apps."PowerToys (Preview)"]
+    Directory = "C:\\Users\\Tycoon\\AppData\\Local\\PowerToys"
+    IsExempt = false
+  [apps."PowerToys (Preview) x64"]
+    Directory = "C:\\Users\\Tycoon\\AppData\\Local\\PowerToys"
+    IsExempt = false
+  [apps."Process Lasso"]
+    Directory = "C:\\Program Files\\Process Lasso"
+    IsExempt = false
+  [apps."Proton Authenticator"]
+    Directory = "C:\\Users\\Tycoon\\AppData\\Local\\Programs\\Proton Authenticator"
+    IsExempt = false
+  [apps."Proton VPN"]
+    Directory = "C:\\Program Files\\Proton\\VPN"
+    IsExempt = false
+  [apps."Python 3.12.8 (64-bit)"]
+    Directory = "C:\\Users\\Tycoon\\AppData\\Local\\Package Cache\\{a6d11f3a-01b2-4b93-b59d-45579247435b}"
+    IsExempt = false
+  [apps."Realtek High Definition Audio Driver"]
+    Directory = "C:\\Program Files\\Realtek\\Audio\\HDA"
+    IsExempt = false
+  [apps."ViGEm Bus Driver"]
+    Directory = "C:\\Program Files\\Nefarius Software Solutions\\ViGEm Bus Driver"
+    IsExempt = false
+  [apps."WinRAR 7.01 (64-bit)"]
+    Directory = "C:\\Program Files\\WinRAR"
+    IsExempt = false
+  [apps.qBittorrent]
+    Directory = "\"C:\\Program Files\\qBittorrent"
+    IsExempt = false

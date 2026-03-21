@@ -17,14 +17,14 @@ func main() {
 
 	// Create application with options
 	err := wails.Run(&options.App{
-		Title: "Cura System Utility",
-		Width: 1120,
+		Title:  "Cura System Utility",
+		Width:  1150,
 		Height: 700,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
 		BackgroundColour: &options.RGBA{R: 27, G: 38, B: 54, A: 1},
-		OnStartup: app.startup,
+		OnStartup:        app.startup,
 		Bind: []interface{}{
 			app,
 		},

@@ -80,6 +80,8 @@
 /* Table Styling */
 .table-container {
   width: 100%;
+  max-height: 60vh!important;
+  overflow-y: auto;
 }
 
 .whitelist-table {
@@ -134,19 +136,37 @@
 
 /* Status Pills */
 .status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
 }
 
-.status-pill.active { background: rgba(16, 185, 129, 0.1); color: var(--emerald); }
-.status-pill.excluded { background: rgba(59, 50, 226, 0.1); color: var(--primary); }
-.status-pill.paused { background: rgba(148, 163, 184, 0.1); color: var(--slate-400); }
+.status-pill.active {
+    background: #10b98120;
+    color: #10b981;
+}
+
+.status-pill.excluded {
+    background: #f59e0b20;
+    color: #f59e0b;
+}
+
+.process-path {
+    display: block;
+    font-size: 10px;
+    color: #64748b;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 .dot {
   width: 4px;
@@ -171,3 +191,50 @@
 }
 
 .text-right { text-align: right; }
+
+.action-cell {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+}
+
+.action-btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+/* Whitelist/Exempt Button */
+.action-btn.whitelist {
+    background: #3b82f620;
+    color: #60a5fa;
+    border-color: #3b82f640;
+}
+
+.action-btn.whitelist:hover {
+    background: #3b82f6;
+    color: white;
+}
+
+/* Unwhitelist/Restore Button */
+.action-btn.unwhitelist {
+    background: #f59e0b20;
+    color: #fbbf24;
+    border-color: #f59e0b40;
+}
+
+.action-btn.unwhitelist:hover {
+    background: #f59e0b;
+    color: white;
+}
+
+/* Ensure the status pill no longer looks like a button */
+.status-pill {
+    cursor: default; /* Remove pointer */
+    pointer-events: none; /* Ignore clicks */
+}

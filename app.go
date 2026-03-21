@@ -7,8 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/its-ernest/cura/pkg/memory"
 	"github.com/its-ernest/cura/pkg/logging"
+	"github.com/its-ernest/cura/pkg/memory"
+	"github.com/its-ernest/cura/pkg/whitelist"
 
 	"github.com/BurntSushi/toml"
 	"github.com/shirou/gopsutil/v3/cpu"
@@ -34,8 +35,9 @@ type EnforcementConfig struct {
 
 // Config to match settings.toml structure
 type Config struct {
-	Version     string            `toml:"version" json:"version"`
-	Enforcement EnforcementConfig `toml:"enforcement" json:"enforcement"`
+	Version     string                      `toml:"version" json:"version"`
+	Enforcement EnforcementConfig           `toml:"enforcement" json:"enforcement"`
+	Apps        map[string]memory.AppStatus `toml:"apps" json:"apps"`
 }
 
 type App struct {
@@ -43,8 +45,6 @@ type App struct {
 	memoryManager *memory.Manager
 	config        Config
 }
-
-var l *logging.Logger = logging.NewLogger("cura.log")
 
 // NewApp creates a new App instance
 func NewApp() *App {
@@ -54,11 +54,19 @@ func NewApp() *App {
 	}
 }
 
+var l *logging.Logger = logging.NewLogger("cura.log")
+
 // startup is called when the app starts.
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+
 	// automatically load settings on startup
 	cfg, err := a.LoadSettings()
+
+	// get installed apps list
+	a.RefreshApps()
+
+	// start enforcer if previously enabled
 	if err == nil && cfg.Enforcement.IsEnforced {
 		a.memoryManager.StartEnforcer(ctx)
 		fmt.Println("Auto-enforcer started")
@@ -72,14 +80,14 @@ func (a *App) SetMemoryCap(percent float64) {
 
 // GetLiveStats provides the pulse for the React Dashboard rings
 func (a *App) GetLiveStats() (SystemStats, error) {
-	// get CPU aggregate usage
+	// get cpu aggregate usage
 	c, _ := cpu.Percent(0, false)
 	cpuVal := 0.0
 	if len(c) > 0 {
 		cpuVal = c[0]
 	}
 
-	// get Memory Stats
+	// get memory stats
 	v, _ := mem.VirtualMemory()
 
 	// logic: calculate actual usage (total - available)
@@ -118,6 +126,9 @@ func (a *App) LoadSettings() (Config, error) {
 	}
 	// sync the memory manager with loaded settings
 	a.memoryManager.SetCap(a.config.Enforcement.MemoryCap)
+	if a.config.Apps != nil {
+		a.memoryManager.AppMap = a.config.Apps
+	}
 	return a.config, nil
 }
 
@@ -133,24 +144,82 @@ func (a *App) SaveSettings(cfg Config) error {
 }
 
 func (a *App) GetLogs(limit int) (string, error) {
-    
-    content, err := l.ReadLogs(limit) 
-    if err != nil {
-        return "", err
-    }
 
-    lines := strings.Split(strings.TrimSpace(content), "\n")
-    if len(lines) == 0 || (len(lines) == 1 && lines[0] == "") {
-        return "Waiting for system events...", nil
-    }
+	content, err := l.ReadLogs(limit)
+	if err != nil {
+		return "", err
+	}
 
-    start := 0
-    if len(lines) > limit {
-        start = len(lines) - limit
-    }
+	lines := strings.Split(strings.TrimSpace(content), "\n")
+	if len(lines) == 0 || (len(lines) == 1 && lines[0] == "") {
+		return "Waiting for system events...", nil
+	}
 
-    finalLogs := strings.Join(lines[start:], "\n")
-    fmt.Printf("DEBUG: Sent %d lines to UI.\n", len(lines[start:]))
-    
-    return finalLogs, nil
+	start := 0
+	if len(lines) > limit {
+		start = len(lines) - limit
+	}
+
+	finalLogs := strings.Join(lines[start:], "\n")
+	fmt.Printf("DEBUG: Sent %d lines to UI.\n", len(lines[start:]))
+
+	return finalLogs, nil
+}
+
+// Whitelist exposed methods
+// GetAppMap returns the current memory map to the UI
+func (a *App) GetAppMap() map[string]memory.AppStatus {
+	return a.memoryManager.AppMap
+}
+
+func (a *App) RefreshApps() {
+	rawApps, err := whitelist.GetWindowsApps()
+	if err != nil {
+		l.Write(fmt.Sprintf("ERROR: Registry scan failed: %v", err))
+		return
+	}
+
+	newCount := 0
+	for _, app := range rawApps {
+		// Crucial: Only add if it doesn't exist to avoid overwriting user 'IsExempt' settings
+		if _, exists := a.memoryManager.AppMap[app.Name]; !exists {
+			a.memoryManager.AppMap[app.Name] = memory.AppStatus{
+				Directory: app.ExePath,
+				IsExempt:  false,
+			}
+			newCount++
+		}
+	}
+
+	// 3. Sync the local config and save if new apps were found
+	if newCount > 0 {
+		a.config.Apps = a.memoryManager.AppMap
+		a.SaveSettings(a.config)
+		l.Write(fmt.Sprintf("SYSTEM: Found %d new apps. Total registered: %d", newCount, len(a.memoryManager.AppMap)))
+	}
+}
+
+// ToggleExemption flips the is_exempt status and persists
+func (a *App) ToggleExemption(name string) {
+	if app, ok := a.memoryManager.AppMap[name]; ok {
+		// toggle the state in the manager
+		app.IsExempt = !app.IsExempt
+		a.memoryManager.AppMap[name] = app
+
+		// persist the change to the toml file via the config
+		a.config.Apps = a.memoryManager.AppMap
+		a.SaveSettings(a.config)
+
+		status := "MONITORED"
+		if app.IsExempt {
+			status = "EXEMPT"
+		}
+		l.Write(fmt.Sprintf("CONFIG: %s is now %s", name, status))
+	}
+}
+
+// RemoveApp deletes an entry from the map
+func (a *App) RemoveApp(name string) {
+	delete(a.memoryManager.AppMap, name)
+	l.Write(fmt.Sprintf("CONFIG: Removed %s from Registry", name))
 }
