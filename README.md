@@ -11,8 +11,14 @@ Cura is a lightweight, Go-powered utility designed to protect your system's stab
 If you are a user looking to keep your system snappy, you can download the latest production-ready binary here:
 
 <div align="">
-  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.7/cura-system-utilityv0.1.7-pre.zip">
-    <img src="https://img.shields.io/badge/DOWNLOAD%20CURA-v0.1.7-06b6d4?style=for-the-badge&logo=windows&logoColor=white" alt="Download Latest Release" height="45">
+  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.8/cura-system-utilityv0.1.8-amd64.zip">
+    <img src="https://img.shields.io/badge/DOWNLOAD%20CURA-v0.1.8(Intel & general PCs)-06b6d4?style=for-the-badge&logo=windows&logoColor=white" alt="Download Latest Release" height="45">
+  </a>
+</div>
+
+<div align="">
+  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.8/cura-system-utilityv0.1.8-arm64.zip">
+    <img src="https://img.shields.io/badge/DOWNLOAD%20CURA-v0.1.8(Samsung, Snapdragon & Qualcomm CPUs)-06b6d4?style=for-the-badge&logo=windows&logoColor=white" alt="Download Latest Release" height="45">
   </a>
 </div>
 
