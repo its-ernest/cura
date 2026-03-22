@@ -11,13 +11,13 @@
 If you are a user looking to keep your system snappy, you can download the latest production-ready binary here:
 
 <div align="">
-  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.9/cura-amd64.zip">
+  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.9/cura-amd64-installer.zip">
     <img src="https://img.shields.io/badge/DOWNLOAD%20CURA(amd64)-v0.1.9(Intel & general CPUs)-046f82?style=for-the-badge&logo=windows&logoColor=white" alt="Download Latest Release" height="45">
   </a>
 </div>
 
 <div align="">
-  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.9/cura-arm64.zip">
+  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.9/cura-arm64-installer.zip">
     <img src="https://img.shields.io/badge/DOWNLOAD%20CURA(arm64)-v0.1.9(Samsung, Snapdragon & Qualcomm CPUs)-046f82?style=for-the-badge&logo=windows&logoColor=white" alt="Download Latest Release" height="45">
   </a>
 </div>

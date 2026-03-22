@@ -50,11 +50,12 @@ func GetProtectedProcesses() map[string]bool {
 		"LsaIso.exe": true, "fontdrvhost.exe": true, "vmcompute.exe": true,
 		"conhost.exe": true, "Taskmgr.exe": true,
 
-		// dev tools 
+		// dev tools
 		"WindowsTerminal.exe": true, "OpenConsole.exe": true, "powershell.exe": true,
 
 		// critical for app to run
 		"msedgewebview2.exe": true, "cura.exe": true, "cura-dev.exe": true,
+		"cura-amd64.exe": true, "cura-arm64.exe": true,
 
 		// temp, needed for testing
 		//"Code.exe": true, "node.exe": true, "taskhostw.exe": true, "wails.exe": true,
