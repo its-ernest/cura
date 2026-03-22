@@ -8,3 +8,8 @@ package-lock.json
 go.sum
 
 cura.log
+
+# inno setup binaries
+inno-setup/*.exe
+inno-setup/amd64_folder
+inno-setup/arm64_folder
