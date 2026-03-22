@@ -5,11 +5,16 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"path/filepath"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/its-ernest/cura/pkg/logging"
 	"github.com/its-ernest/cura/pkg/memory"
+	"github.com/its-ernest/cura/pkg/updater"
 	"github.com/its-ernest/cura/pkg/whitelist"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 
 	"github.com/BurntSushi/toml"
 	"github.com/shirou/gopsutil/v3/cpu"
@@ -31,6 +36,7 @@ type EnforcementConfig struct {
 	IsEnforced bool    `toml:"is_enforced" json:"is_enforced"`
 	MemoryCap  float64 `toml:"memory_cap" json:"memory_cap"`
 	CPUCeiling float64 `toml:"cpu_ceiling" json:"cpu_ceiling"`
+	AutoUpdate bool    `toml:"auto_update" json:"auto_update"`
 }
 
 // Config to match settings.toml structure
@@ -42,13 +48,18 @@ type Config struct {
 
 type App struct {
 	ctx           context.Context
+	path          string
 	memoryManager *memory.Manager
 	config        Config
+	configMu      sync.Mutex
 }
 
 // NewApp creates a new App instance
 func NewApp() *App {
+	execPath, _ := os.Executable()
+	dir := filepath.Dir(execPath)
 	return &App{
+		path: filepath.Join(dir, "settings.toml"),
 		// default to 80% usage cap (20% reserve)
 		memoryManager: memory.NewManager(80.0),
 	}
@@ -66,10 +77,29 @@ func (a *App) startup(ctx context.Context) {
 	// get installed apps list
 	a.RefreshApps()
 
+	// update check
+	go func() {
+		time.Sleep(2 * time.Second)
+		release, hasUpdate, err := updater.CheckForUpdates(a.config.Version)
+		if err == nil && hasUpdate {
+			if a.config.Enforcement.AutoUpdate {
+				l.Write("UPDATE: Auto-update triggered for " + release.TagName)
+			} else {
+				runtime.EventsEmit(a.ctx, "update_available", release)
+			}
+		}
+
+		// cleanup .old update files
+		a.cleanupLegacyFiles()
+	}()
+
 	// start enforcer if previously enabled
 	if err == nil && cfg.Enforcement.IsEnforced {
-		a.memoryManager.StartEnforcer(ctx)
-		fmt.Println("Auto-enforcer started")
+		go func() {
+			time.Sleep(500 * time.Millisecond)
+			a.memoryManager.StartEnforcer(a.ctx)
+			l.Write("SYSTEM: Auto-enforcer resumed from settings.")
+		}()
 	}
 }
 
@@ -120,7 +150,9 @@ func (a *App) StopEnforcement() {
 
 // LoadSettings reads the TOML file and returns it to React
 func (a *App) LoadSettings() (Config, error) {
-	_, err := toml.DecodeFile("settings.toml", &a.config)
+	a.configMu.Lock()
+	defer a.configMu.Unlock()
+	_, err := toml.DecodeFile(a.path, &a.config)
 	if err != nil {
 		return Config{}, err
 	}
@@ -134,13 +166,53 @@ func (a *App) LoadSettings() (Config, error) {
 
 // SaveSettings writes the current config state to the TOML file
 func (a *App) SaveSettings(cfg Config) error {
+	a.configMu.Lock()
+	defer a.configMu.Unlock()
 	a.config = cfg
-	f, err := os.Create("settings.toml")
+	f, err := os.Create(a.path)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 	return toml.NewEncoder(f).Encode(cfg)
+}
+
+func (a *App) cleanupLegacyFiles() {
+	execPath, _ := os.Executable()
+	oldFile := execPath + ".old"
+
+	if _, err := os.Stat(oldFile); err == nil {
+		err := os.Remove(oldFile)
+		if err == nil {
+			l.Write("SYSTEM: Cleaned up legacy update files.")
+		}
+	}
+}
+
+func (a *App) TriggerUpdate(release updater.GitHubRelease) string {
+	err := updater.DownloadAndInstall(&release)
+	if err != nil {
+		l.Write(fmt.Sprintf("UPDATE ERROR: %v", err))
+		return "Update failed: " + err.Error()
+	}
+
+	a.configMu.Lock()
+	a.config.Version = release.TagName
+	a.configMu.Unlock()
+
+	err = a.SaveSettings(a.config)
+	if err != nil {
+		l.Write("ERROR: Could not sync new version to TOML: " + err.Error())
+	}
+
+	l.Write("SYSTEM: Update installed. Binary swapped. Restarting in 1s...")
+
+	go func() {
+		time.Sleep(1 * time.Second)
+		os.Exit(0)
+	}()
+
+	return "Success"
 }
 
 func (a *App) GetLogs(limit int) (string, error) {
@@ -173,6 +245,7 @@ func (a *App) GetAppMap() map[string]memory.AppStatus {
 }
 
 func (a *App) RefreshApps() {
+	a.configMu.Lock()
 	rawApps, err := whitelist.GetWindowsApps()
 	if err != nil {
 		l.Write(fmt.Sprintf("ERROR: Registry scan failed: %v", err))
@@ -181,7 +254,7 @@ func (a *App) RefreshApps() {
 
 	newCount := 0
 	for _, app := range rawApps {
-		// Crucial: Only add if it doesn't exist to avoid overwriting user 'IsExempt' settings
+		// crucial: only add if it doesn't exist to avoid overwriting user 'IsExempt' settings
 		if _, exists := a.memoryManager.AppMap[app.Name]; !exists {
 			a.memoryManager.AppMap[app.Name] = memory.AppStatus{
 				Directory: app.ExePath,
@@ -191,7 +264,8 @@ func (a *App) RefreshApps() {
 		}
 	}
 
-	// 3. Sync the local config and save if new apps were found
+	// sync the local config and save if new apps were found
+	a.configMu.Unlock()
 	if newCount > 0 {
 		a.config.Apps = a.memoryManager.AppMap
 		a.SaveSettings(a.config)
@@ -201,6 +275,7 @@ func (a *App) RefreshApps() {
 
 // ToggleExemption flips the is_exempt status and persists
 func (a *App) ToggleExemption(name string) {
+	a.configMu.Lock()
 	if app, ok := a.memoryManager.AppMap[name]; ok {
 		// toggle the state in the manager
 		app.IsExempt = !app.IsExempt
@@ -208,7 +283,10 @@ func (a *App) ToggleExemption(name string) {
 
 		// persist the change to the toml file via the config
 		a.config.Apps = a.memoryManager.AppMap
-		a.SaveSettings(a.config)
+		a.configMu.Unlock()
+		if ok {
+			a.SaveSettings(a.config)
+		}
 
 		status := "MONITORED"
 		if app.IsExempt {
@@ -220,6 +298,11 @@ func (a *App) ToggleExemption(name string) {
 
 // RemoveApp deletes an entry from the map
 func (a *App) RemoveApp(name string) {
+	a.configMu.Lock()
 	delete(a.memoryManager.AppMap, name)
-	l.Write(fmt.Sprintf("CONFIG: Removed %s from Registry", name))
+	a.config.Apps = a.memoryManager.AppMap
+	a.configMu.Unlock()
+
+	a.SaveSettings(a.config)
+	l.Write(fmt.Sprintf("CONFIG: Removed %s", name))
 }

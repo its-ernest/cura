@@ -148,3 +148,122 @@ body {
     background: #334155;
     border-radius: 4px;
 }
+
+/*Update overlay*/
+.update-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.update-modal {
+    background: #1e293b;
+    border: 1px solid #334155;
+    padding: 30px;
+    border-radius: 16px;
+    width: 450px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.update-badge {
+    display: inline-block;
+    background: #3b82f6;
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+
+.update-body {
+    margin: 20px 0;
+    color: #94a3b8;
+    font-size: 14px;
+}
+.loader-bar {
+    width: 100%;
+    height: 4px;
+    background: #334155;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.loader-fill {
+    width: 30%;
+    height: 100%;
+    background: #3b82f6;
+    animation: loading-slide 1.5s infinite ease-in-out;
+}
+
+@keyframes loading-slide {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+}
+
+.modal-busy {
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.release-notes {
+    background: #0f172a;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #e2e8f0;
+    max-height: 200px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    border-left: 3px solid #3b82f6;
+}
+
+.update-footer {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.btn-upgrade {
+    flex: 1;
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-upgrade:hover { background: #2563eb; }
+
+.btn-ignore {
+    background: transparent;
+    color: #64748b;
+    border: 1px solid #334155;
+    padding: 12px;
+    border-radius: 30px;
+    cursor: pointer;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}

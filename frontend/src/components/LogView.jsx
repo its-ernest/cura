@@ -6,13 +6,13 @@ export const LogView = () => {
     const logEndRef = useRef(null);
 
     const fetchLogs = () => {
-    GetLogs(100)
-    .then(log => {
-        console.log("Received string length:", log.length);
-        setLogs(log);
-    })
-    .catch(err => console.error("Wails Bridge Error:", err));
-};
+        GetLogs(100)
+            .then(log => {
+                console.log("Received string length:", log.length);
+                setLogs(log);
+            })
+            .catch(err => console.error("Wails Bridge Error:", err));
+    };
 
     useEffect(() => {
         fetchLogs();

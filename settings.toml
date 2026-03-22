@@ -1,8 +1,9 @@
-version = "1.0.0"
+version = "v0.1.4"
 
 [enforcement]
   is_enforced = true
   memory_cap = 70.0
   cpu_ceiling = 70.0
+  auto_update = false
 
 [apps]
