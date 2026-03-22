@@ -1,4 +1,4 @@
-; --- Cura v0.1.9 Enterprise Setup ---
+; --- Cura v0.1.9 ---
 
 [Setup]
 AppId={{D2445A8C-ED2B-4273-A3C2-2EA74F5916D7}}
@@ -14,6 +14,11 @@ OutputBaseFilename=cura-arm64-installer
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+
+; forces the installer to run as Admin
+PrivilegesRequired=admin
+; ensures the app is installed for all users
+PrivilegesRequiredOverridesAllowed=dialog
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
