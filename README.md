@@ -2,7 +2,7 @@
 
 **Precision System Resource Enforcement for Windows.**
 
-Cura is a lightweight, Go-powered utility designed to protect your system's stability. By monitoring real-time RAM and CPU usage, Cura automatically identifies and terminates background "stale" processes when your custom-defined memory caps are breached.
+**Cura System Utility** is a lightweight, Go-powered utility designed to protect your system's stability. By monitoring real-time RAM and CPU usage, Cura automatically identifies and terminates background "stale" processes when your custom-defined memory caps are breached.
 
 <img src="./screenshot.png" alt="Screenshot">
 
@@ -11,14 +11,14 @@ Cura is a lightweight, Go-powered utility designed to protect your system's stab
 If you are a user looking to keep your system snappy, you can download the latest production-ready binary here:
 
 <div align="">
-  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.9/cura-system-utilityv0.1.9-amd64.zip">
-    <img src="https://img.shields.io/badge/DOWNLOAD%20CURA(x64/amd64)-v0.1.9(Intel & general PCs)-06b6d4?style=for-the-badge&logo=windows&logoColor=white" alt="Download Latest Release" height="45">
+  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.9/cura-amd64.zip">
+    <img src="https://img.shields.io/badge/DOWNLOAD%20CURA(amd64)-v0.1.9(Intel & general CPUs)-046f82?style=for-the-badge&logo=windows&logoColor=white" alt="Download Latest Release" height="45">
   </a>
 </div>
 
 <div align="">
-  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.9/cura-system-utilityv0.1.9-arm64.zip">
-    <img src="https://img.shields.io/badge/DOWNLOAD%20CURA(arm64)-v0.1.9(Samsung, Snapdragon & Qualcomm CPUs)-06b6d4?style=for-the-badge&logo=windows&logoColor=white" alt="Download Latest Release" height="45">
+  <a href="https://github.com/its-ernest/cura/releases/download/v0.1.9/cura-arm64.zip">
+    <img src="https://img.shields.io/badge/DOWNLOAD%20CURA(arm64)-v0.1.9(Samsung, Snapdragon & Qualcomm CPUs)-046f82?style=for-the-badge&logo=windows&logoColor=white" alt="Download Latest Release" height="45">
   </a>
 </div>
 
@@ -61,4 +61,4 @@ Cura has the power to terminate processes. While it includes a default protectio
 ---
 
 **License:** [MIT](https://www.google.com/search?q=./LICENSE)
-* "As a condition of this license, any software or redistribution derived from this source code must retain the 'Original Developer' attribution and a link to the original repository github.com/its-ernest/cura in a clearly visible 'About' or 'Credits' section of the user interface."
+* As a condition of this license, any software or redistribution derived from this source code must retain the 'Original Developer' attribution and a link to the original repository github.com/its-ernest/cura in a clearly visible 'About' or 'Credits' section of the user interface
