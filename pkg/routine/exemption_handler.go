@@ -43,7 +43,7 @@ func (h *ExemptionHandler) Cleanup(mm *memory.Manager) {
 	for name, wasExempt := range h.PreviousStates {
 		if app, exists := mm.AppMap[name]; exists {
 			if app.Directory == "ROUTINE_TEMP" {
-				// If we added it just for this routine, NOW we can delete it
+				// If we added it just for this routine, now we can delete it
 				delete(mm.AppMap, name)
 			} else {
 				// If it was an existing app, just revert its status

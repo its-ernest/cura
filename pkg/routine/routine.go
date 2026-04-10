@@ -29,7 +29,7 @@ type Routine struct {
 	Trigger       Trigger       `yaml:"trigger" json:"trigger"`
 	Actions       []Action      `yaml:"actions" json:"actions"`
 	StopCondition StopCondition `yaml:"stop_condition" json:"stop_condition"`
-	IsActive      bool          `yaml:"-" json:"isActive"` // Note: camelCase for JS
+	IsActive      bool          `yaml:"-" json:"isActive"` // camelCase for JS
 }
 
 // LoadRoutine reads a YAML file and returns a Routine pointer

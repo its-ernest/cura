@@ -1,12 +1,13 @@
-name: Gaming Super-Mode
-enabled: false
+name: Example Test
+enabled: true
 trigger:
     type: app_launch
-    target: cs2.exe
+    target: explorer.exe
 actions:
     - type: set_memory_cap
-      value: 10
+      value: 70
     - type: temporary_exemption
+      value: 0
 stop_condition:
     type: app_close
-    target: cs2.exe
+    target: explorer.exe

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/its-ernest/cura/pkg/routine"
 	"gopkg.in/yaml.v3"
@@ -60,4 +61,32 @@ func (a *App) ToggleRoutine(name string, enabled bool) {
 		}
 	}
 	l.Write(fmt.Sprintf("ROUTINE: Toggle %s to %v (Persisted)", name, enabled))
+}
+
+// CreateRoutine saves a new routine to a YAML file and adds it to the manager
+func (a *App) CreateRoutine(r routine.Routine) error {
+	// 1. Sanitize name for filename
+	filename := fmt.Sprintf("%s.yaml", strings.ToLower(strings.ReplaceAll(r.Name, " ", "_")))
+	filepath := filepath.Join("./routines", filename)
+
+	r.Enabled = true // Default to enabled
+	r.Path = filepath
+
+	// 2. Marshal to YAML
+	data, err := yaml.Marshal(r)
+	if err != nil {
+		return fmt.Errorf("failed to encode routine: %v", err)
+	}
+
+	// 3. Save to disk
+	err = os.WriteFile(filepath, data, 0644)
+	if err != nil {
+		return fmt.Errorf("failed to save file: %v", err)
+	}
+
+	// 4. Update memory state so the background loop sees it immediately
+	a.routineManager.Routines = append(a.routineManager.Routines, &r)
+
+	l.Write(fmt.Sprintf("ROUTINE: Created new pipeline '%s'", r.Name))
+	return nil
 }
