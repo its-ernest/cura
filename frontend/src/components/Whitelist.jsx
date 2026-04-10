@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './Whitelist.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faSearch, faTrash, faPlus, faShieldHalved,
-  faTerminal, faCode, faGlobe, faCube
-} from '@fortawesome/free-solid-svg-icons';
+import {faSearch, faTrash, faPlus, faShieldHalved, faCube } from '@fortawesome/free-solid-svg-icons';
 
 // Wails bindings
-import { GetAppMap, ToggleExemption, RemoveApp } from '../../wailsjs/go/main/App';
+import { GetAppMap, ToggleExemption, RemoveApp, SelectProcess } from '../../wailsjs/go/main/App';
 
 export function Whitelist() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,6 +35,20 @@ export function Whitelist() {
     RemoveApp(name).then(refreshApps);
   };
 
+  const handleAddProcess = async () => {
+    try {
+      const newProcessName = await SelectProcess();
+      if (newProcessName) {
+        // refresh the list to show the new entry
+        refreshApps();
+        // optional: show a small toast or notification
+        console.log(`Added ${newProcessName} to registry.`);
+      }
+    } catch (err) {
+      console.error("Failed to add process:", err);
+    }
+  };
+
   // filter based on search
   const filteredApps = apps.filter(app =>
     app.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -55,7 +66,7 @@ export function Whitelist() {
           <p>Processes listed here bypass all performance caps and resource limits.</p>
         </div>
 
-        <button className="add-btn" onClick={() => {/* Trigger File Picker via Wails */ }}>
+        <button className="add-btn" onClick={handleAddProcess}>
           <FontAwesomeIcon icon={faPlus} />
           <span>Add Process</span>
         </button>

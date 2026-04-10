@@ -12,8 +12,8 @@ import (
 
 	"github.com/its-ernest/cura/pkg/logging"
 	"github.com/its-ernest/cura/pkg/memory"
+	"github.com/its-ernest/cura/pkg/routine"
 	"github.com/its-ernest/cura/pkg/updater"
-	"github.com/its-ernest/cura/pkg/whitelist"
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 
 	"github.com/BurntSushi/toml"
@@ -47,21 +47,24 @@ type Config struct {
 }
 
 type App struct {
-	ctx           context.Context
-	path          string
-	memoryManager *memory.Manager
-	config        Config
-	configMu      sync.Mutex
+	ctx            context.Context
+	path           string
+	memoryManager  *memory.Manager
+	routineManager *routine.Manager
+	config         Config
+	configMu       sync.Mutex
 }
 
 // NewApp creates a new App instance
 func NewApp() *App {
 	execPath, _ := os.Executable()
 	dir := filepath.Dir(execPath)
+	mm := memory.NewManager(80.0)
 	return &App{
 		path: filepath.Join(dir, "settings.toml"),
 		// default to 80% usage cap (20% reserve)
-		memoryManager: memory.NewManager(80.0),
+		memoryManager:  mm,
+		routineManager: routine.NewManager(mm),
 	}
 }
 
@@ -70,6 +73,15 @@ var l *logging.Logger = logging.NewLogger("cura.log")
 // startup is called when the app starts.
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+
+	routines, err := a.GetRoutines()
+	if err == nil {
+		a.routineManager.Routines = routines
+	} else {
+		l.Write(fmt.Sprintf("SYSTEM: No routines found or folder missing: %v", err))
+	}
+
+	go a.routineManager.Run()
 
 	// automatically load settings on startup
 	cfg, err := a.LoadSettings()
@@ -177,6 +189,7 @@ func (a *App) SaveSettings(cfg Config) error {
 	return toml.NewEncoder(f).Encode(cfg)
 }
 
+// Updates logic
 func (a *App) cleanupLegacyFiles() {
 	execPath, _ := os.Executable()
 	oldFile := execPath + ".old"
@@ -233,76 +246,7 @@ func (a *App) GetLogs(limit int) (string, error) {
 	}
 
 	finalLogs := strings.Join(lines[start:], "\n")
-	fmt.Printf("DEBUG: Sent %d lines to UI.\n", len(lines[start:]))
+	//fmt.Printf("DEBUG: Sent %d lines to UI.\n", len(lines[start:]))
 
 	return finalLogs, nil
-}
-
-// Whitelist exposed methods
-// GetAppMap returns the current memory map to the UI
-func (a *App) GetAppMap() map[string]memory.AppStatus {
-	return a.memoryManager.AppMap
-}
-
-func (a *App) RefreshApps() {
-	a.configMu.Lock()
-	rawApps, err := whitelist.GetWindowsApps()
-	if err != nil {
-		l.Write(fmt.Sprintf("ERROR: Registry scan failed: %v", err))
-		return
-	}
-
-	newCount := 0
-	for _, app := range rawApps {
-		// crucial: only add if it doesn't exist to avoid overwriting user 'IsExempt' settings
-		if _, exists := a.memoryManager.AppMap[app.Name]; !exists {
-			a.memoryManager.AppMap[app.Name] = memory.AppStatus{
-				Directory: app.ExePath,
-				IsExempt:  false,
-			}
-			newCount++
-		}
-	}
-
-	// sync the local config and save if new apps were found
-	a.configMu.Unlock()
-	if newCount > 0 {
-		a.config.Apps = a.memoryManager.AppMap
-		a.SaveSettings(a.config)
-		l.Write(fmt.Sprintf("SYSTEM: Found %d new apps. Total registered: %d", newCount, len(a.memoryManager.AppMap)))
-	}
-}
-
-// ToggleExemption flips the is_exempt status and persists
-func (a *App) ToggleExemption(name string) {
-	a.configMu.Lock()
-	if app, ok := a.memoryManager.AppMap[name]; ok {
-		// toggle the state in the manager
-		app.IsExempt = !app.IsExempt
-		a.memoryManager.AppMap[name] = app
-
-		// persist the change to the toml file via the config
-		a.config.Apps = a.memoryManager.AppMap
-		a.configMu.Unlock()
-		if ok {
-			a.SaveSettings(a.config)
-		}
-
-		status := "MONITORED"
-		if app.IsExempt {
-			status = "EXEMPT"
-		}
-		l.Write(fmt.Sprintf("CONFIG: %s is now %s", name, status))
-	}
-}
-
-// RemoveApp deletes an entry from the map
-func (a *App) RemoveApp(name string) {
-	a.configMu.Lock()
-	delete(a.memoryManager.AppMap, name)
-	a.config.Apps = a.memoryManager.AppMap
-	a.configMu.Unlock()
-
-	a.SaveSettings(a.config)
-	l.Write(fmt.Sprintf("CONFIG: Removed %s", name))
 }

@@ -1,7 +1,6 @@
 package memory
 
 import (
-	"fmt"
 	"strings"
 	"time"
 
@@ -14,12 +13,12 @@ func (m *Manager) IsStale(p *process.Process, threshold time.Duration) bool {
 	pid := p.Pid
 	name, err := p.Name()
 	if err != nil {
-		l.Write(fmt.Sprintf("SILENT ERROR: Couldn't obtain process info name for PID %d", p.Pid))
+		//l.Write(fmt.Sprintf("SILENT ERROR: Couldn't obtain process info name for PID %d", p.Pid))
 		return false
 	}
 	exePath, err := p.Exe()
 	if err != nil {
-		l.Write(fmt.Sprintf("SILENT ERROR: Couldn't obtain process info exePath for PID %d", p.Pid))
+		//l.Write(fmt.Sprintf("SILENT ERROR: Couldn't obtain process info exePath for PID %d", p.Pid))
 		return false
 	}
 

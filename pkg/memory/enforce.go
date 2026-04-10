@@ -31,7 +31,7 @@ func (m *Manager) enforce() {
 		name, err := p.Name()
 		if err != nil {
 			// name is often unavailable for kernel tasks even as admin
-			l.Write(fmt.Sprintf("SILENT ERROR: Couldn't obtain process info for PID %d", p.Pid))
+			//l.Write(fmt.Sprintf("SILENT ERROR: Couldn't obtain process info for PID %d", p.Pid))
 			continue
 		}
 

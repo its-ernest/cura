@@ -1,0 +1,12 @@
+name: Gaming Super-Mode
+enabled: true
+trigger:
+    type: app_launch
+    target: cs2.exe
+actions:
+    - type: set_memory_cap
+      value: 10
+    - type: temporary_exemption
+stop_condition:
+    type: app_close
+    target: cs2.exe

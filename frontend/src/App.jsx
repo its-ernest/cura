@@ -5,6 +5,7 @@ import { TopBar } from './components/TopBar';
 import { SideBar } from './components/SideBar';
 import { Dashboard } from './components/Dashboard';
 import { Whitelist } from './components/Whitelist';
+import { Routines } from './components/Routines';
 import { LogView } from './components/LogView';
 
 // Wails Go Functions
@@ -95,7 +96,7 @@ function App() {
       case 'terminal':
         return <LogView />;
       case 'advanced':
-        return <div className="placeholder-view">Modes & Routines coming soon...</div>;
+        return <Routines />;
       default:
         return <Dashboard />;
     }

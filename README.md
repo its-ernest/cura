@@ -1,6 +1,12 @@
 # 🛡️ Cura (as in "curer")
 
-**Precision System Resource Enforcement for Windows.**
+[![Go Reference](https://pkg.go.dev/badge/github.com/its-ernest/cura.svg)](https://pkg.go.dev/github.com/its-ernest/cura)
+[![Go Report Card](https://goreportcard.com/badge/github.com/its-ernest/cura)](https://goreportcard.com/report/github.com/its-ernest/cura)
+[![Dagger Docs](https://github.com/its-ernest/cura/actions/workflows/docs.yml/badge.svg)](https://github.com/its-ernest/cura/actions/workflows/docs.yml)
+[![Build Status](https://github.com/its-ernest/cura/actions/workflows/go.yml/badge.svg)](https://github.com/its-ernest/cura/actions/workflows/go.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**System Performance Booster & Resource Enforcement for Windows.**
 
 **Cura System Utility** is a lightweight, Go-powered utility designed to protect your system's stability. By monitoring real-time RAM and CPU usage, Cura automatically identifies and terminates background "stale" processes when your custom-defined memory caps are breached.
 
