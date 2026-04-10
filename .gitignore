@@ -6,7 +6,7 @@ wailsjs/
 package-lock.json
 
 go.sum
-
+*.exe
 cura.log
 
 # inno setup binaries

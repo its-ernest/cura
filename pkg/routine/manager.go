@@ -37,12 +37,13 @@ func (m *Manager) Run() {
 			isRunning := CheckProcess(r.Trigger.Target)
 
 			if isRunning && !r.IsActive {
-				l.Write(fmt.Sprintf("ROUTINE: Trigger met for '%s'. Activating...", r.Name))
 				m.Activate(r)
 			} else if !isRunning && r.IsActive {
 				l.Write(fmt.Sprintf("ROUTINE: Stop condition met for '%s'. Reverting...", r.Name))
 				m.Deactivate(r)
 			}
+
+			//l.Write(fmt.Sprintf("ROUTINE: Trigger met for '%s', memory cap: %f. Activating...", r.Name, m.MemoryManager.CapPercentage))
 		}
 	}
 }

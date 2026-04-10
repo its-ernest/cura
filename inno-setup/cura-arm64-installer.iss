@@ -40,9 +40,9 @@ Name: "{autodesktop}\Cura"; Filename: "{app}\cura-arm64.exe"; Tasks: desktopicon
 ; This handles the 'Auto-start on boot' task
 Root: HKCU; Subkey: "Software\Microsoft\Windows\CurrentVersion\Run"; \
     ValueType: string; ValueName: "CuraEnforcer"; \
-    ValueData: """{app}\cura-arm64.exe"""; \
+    ValueData: """{app}\launcher-arm64.exe"""; \
     Tasks: startup; Flags: uninsdeletevalue
 
 [Run]
 ; Option to launch Cura immediately after installation
-Filename: "{app}\cura-arm64.exe"; Description: "{cm:LaunchProgram,Cura}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\launcher-arm64.exe"; Description: "{cm:LaunchProgram,Cura}"; Flags: nowait postinstall skipifsilent
