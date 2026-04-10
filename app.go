@@ -74,6 +74,13 @@ var l *logging.Logger = logging.NewLogger("cura.log")
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
 
+	// automatically load settings on startup
+	cfg, err := a.LoadSettings()
+	if err != nil {
+		l.Write(fmt.Sprintf("SYSTEM: Error loading settings: %v", err))
+	}
+
+	// load routines
 	routines, err := a.GetRoutines()
 	if err == nil {
 		a.routineManager.Routines = routines
@@ -82,9 +89,6 @@ func (a *App) startup(ctx context.Context) {
 	}
 
 	go a.routineManager.Run()
-
-	// automatically load settings on startup
-	cfg, err := a.LoadSettings()
 
 	// get installed apps list
 	a.RefreshApps()

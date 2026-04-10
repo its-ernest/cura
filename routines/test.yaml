@@ -5,7 +5,7 @@ trigger:
     target: explorer.exe
 actions:
     - type: set_memory_cap
-      value: 60
+      value: 80
     - type: temporary_exemption
       value: 0
 stop_condition:

@@ -15,6 +15,8 @@ type AppStatus struct {
 
 type Manager struct {
 	CapPercentage     float64
+	PresetCap         float64              // the user's configured cap from settings/slider
+	RoutineOverride   bool                 // true when a routine is controlling the cap
 	IsActive          bool
 	cancelFunc        context.CancelFunc
 	LastForegroundMap map[int32]time.Time  // last seen foreground
@@ -24,6 +26,7 @@ type Manager struct {
 func NewManager(initialCap float64) *Manager {
 	return &Manager{
 		CapPercentage:     initialCap,
+		PresetCap:         initialCap,
 		IsActive:          false,
 		LastForegroundMap: make(map[int32]time.Time),
 		AppMap:            make(map[string]AppStatus),
@@ -31,7 +34,11 @@ func NewManager(initialCap float64) *Manager {
 }
 
 func (m *Manager) SetCap(percent float64) {
-	m.CapPercentage = percent
+	m.PresetCap = percent
+	// only update the active cap if no routine is currently overriding it
+	if !m.RoutineOverride {
+		m.CapPercentage = percent
+	}
 }
 
 // StartEnforcer uses adaptive frequency to handle rapid RAM spikes.

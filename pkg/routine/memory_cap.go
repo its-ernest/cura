@@ -2,12 +2,13 @@ package routine
 
 import (
 	"fmt"
+
 	"github.com/its-ernest/cura/pkg/memory"
 )
 
 // MemoryCapHandler manages the transition between global and routine-specific caps.
 type MemoryCapHandler struct {
-	OriginalCap float64
+	OriginalCap  float64
 	IsOverridden bool
 }
 
@@ -28,18 +29,24 @@ func (h *MemoryCapHandler) ApplyCap(mm *memory.Manager, newValue interface{}) er
 	if !h.IsOverridden {
 		h.OriginalCap = mm.CapPercentage
 		h.IsOverridden = true
+		l.Write(fmt.Sprintf("ROUTINE: Original cap saved: %.0f%%", h.OriginalCap))
 	}
 
-	// 3. Update the Memory Manager's threshold
+	// 3. Routine cap ALWAYS takes priority — lock out preset/slider changes
+	mm.RoutineOverride = true
 	mm.CapPercentage = float64(val)
-	
+	l.Write(fmt.Sprintf("ROUTINE: Cap overridden to %.0f%% (preset: %.0f%%)", float64(val), mm.PresetCap))
+
 	return nil
 }
 
-// Restore restores original settings from before the routine started
+// Restore restores the preset cap and unlocks routine override
 func (h *MemoryCapHandler) Restore(mm *memory.Manager) {
 	if h.IsOverridden {
-		mm.CapPercentage = h.OriginalCap
+		mm.RoutineOverride = false
+		// use the latest preset (not stale OriginalCap) in case user changed it mid-routine
+		mm.CapPercentage = mm.PresetCap
 		h.IsOverridden = false
+		l.Write(fmt.Sprintf("ROUTINE: Cap restored to preset %.0f%%", mm.PresetCap))
 	}
 }

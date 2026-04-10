@@ -83,7 +83,7 @@ func (m *Manager) enforce() {
 	for _, target := range candidates {
 		v, _ := mem.VirtualMemory()
 		currentUsage := (float64(v.Total-v.Available) / float64(v.Total)) * 100
-
+		l.Write(fmt.Sprintf("ENFORCE: Current cap: %.0f%%", m.CapPercentage))
 		if currentUsage <= m.CapPercentage {
 			break
 		}
